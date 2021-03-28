@@ -1,0 +1,12 @@
+vendor/
+
+coverage.out
+main
+journalist
+
+*.swp
+*.swo
+
+*.bak*
+*.orig*
+*.diff
