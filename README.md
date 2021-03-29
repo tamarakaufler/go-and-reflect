@@ -1,4 +1,4 @@
-# go-and-reflect (on data structure and life)
+# go-and-reflect (on data structures and life)
 
 A little exercise I undertook to get a better understanding of Go reflection.
 
@@ -6,17 +6,22 @@ A little exercise I undertook to get a better understanding of Go reflection.
 
 ## Concept
 
-Go reflection, introspection during runtime of an applicationrevolves around three concepts:
+Go reflection/introspection during runtime of an application revolves around three concepts:
 
-- reflect.Type ........... provides information about the data structure's name (User, Address etc), its field names (Name, Age), field tags metadata
-- reflect.Kind ........... tells if the the data structure is a struct, pointer, map, string etc
-- reflect.Value .......... hold information about the values related to the inspected data structure
+- reflect.Type ........... provides information about the data structure's name (User, Address etc), its field names (Name, Age), field tags
+                           metadata.
+- reflect.Kind ........... tells if a data structure is a struct, pointer, map, string etc
+- reflect.Value .......... holds information about the values inspected data structure field
+
+reflect.Type provides information about data structure fields that identifies them by name (User, Address, Age etc).
+reflect.Kind identifies whether the data structure is a struct, pointer, string, float32 etc.
+reflect.Value informs about the values fields hold and, if allowed, provides a setter.
 
    reflect.Type
         |
         |  reflect.Kind
         |      |
-type Person struct {
+type User struct {
     Name string ....... field name Name                                     examples of reflection
     Age float32 ....... field name Age ........................ reflect.Type:  {Name:Age PkgPath: Type:float32
                                                                                 Tag:env:"USER_AGE" defVal:"23.5"

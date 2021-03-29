@@ -8,7 +8,7 @@ import (
 	refl "github.com/tamarakaufler/go-and-reflect/reflect"
 )
 
-type Configuration struct {
+type User struct {
 	Name    string  `env:"USER_NAME" defVal:"Lucien"`
 	Age     float32 `env:"USER_AGE" defVal:"23.5"`
 	Address Address
@@ -35,7 +35,7 @@ func main() {
 	os.Setenv("USER_ADDRESS_POSTCODE", "AL3")
 	os.Setenv("USER_AGE", "45")
 
-	cfg := &Configuration{}
+	cfg := &User{}
 
 	log.Println("######################### reflect ############################")
 	err := refl.Parse(cfg)
@@ -43,7 +43,7 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println("=====================================================")
-	cfg = &Configuration{
+	cfg = &User{
 		Name:    "Marianne",
 		Age:     33,
 		Address: Address{},
