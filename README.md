@@ -8,8 +8,8 @@ A little exercise I undertook to get a better understanding of Go reflection.
 
 Go reflection/introspection during runtime of an application revolves around three concepts:
 
-- reflect.Type ........... provides information about the data structure's name (User, Address etc), its field names (Name, Age), field tags
-                           metadata.
+- reflect.Type ........... provides information about the data structure's name (User, Address etc), its field names
+                           (Name, Age), field tags metadata.
 - reflect.Kind ........... tells if a data structure is a struct, pointer, map, string etc
 - reflect.Value .......... holds information about the values inspected data structure field
 
@@ -24,16 +24,16 @@ reflect.Value informs about the values fields hold and, if allowed, provides a s
         |      |
 type User struct {
     Name string ....... field name Name                                     examples of reflection
-    Age float32 ....... field name Age ........................ reflect.Type:  {Name:Age PkgPath: Type:float32
+    Age float32 ....... field name Age ............ reflect.Type:  {Name:Age PkgPath: Type:float32
                                                                                 Tag:env:"USER_AGE" defVal:"23.5"
                                                                                 Offset:16 Index:[1] Anonymous:false}
-                                                                reflect.Value:  33
+                                                    reflect.Value:  33
     Address ........... an embedded field, has no field name
 }
 
-type Address struct { ......................................... reflect.Type:  {Name:Address PkgPath: Type:main.Address Tag:
+type Address struct { ............................. reflect.Type:  {Name:Address PkgPath: Type:main.Address Tag:
                                                                                 Offset:24 Index:[2] Anonymous:false}
-                                                                reflect.Value: {Street: City: Postcode: LatLng:{Lat:0 Lng:0}}
+                                                    reflect.Value: {Street: City: Postcode: LatLng:{Lat:0 Lng:0}}
     Street string
     City string
     Postcode string
