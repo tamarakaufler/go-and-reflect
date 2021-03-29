@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/tamarakaufler/go-and-reflect/env"
+	refl "github.com/tamarakaufler/go-and-reflect/reflect"
 )
 
 type Configuration struct {
@@ -36,25 +37,27 @@ func main() {
 
 	cfg := &Configuration{}
 
-	// err := refl.Parse(cfg)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Println("=====================================================")
-	// cfg = &Configuration{
-	// 	Name:    "Marianne",
-	// 	Age:     33,
-	// 	Address: Address{},
-	// }
-	// err = refl.Parse(cfg)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	err := env.Parse(cfg)
+	log.Println("######################### reflect ############################")
+	err := refl.Parse(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("=====================================================")
+	cfg = &Configuration{
+		Name:    "Marianne",
+		Age:     33,
+		Address: Address{},
+	}
+	err = refl.Parse(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("######################### env ############################")
 
+	err = env.Parse(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf(" After parsing: cfg ... %+v\n", cfg)
 }

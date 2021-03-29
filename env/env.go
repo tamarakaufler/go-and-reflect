@@ -9,12 +9,6 @@ import (
 	"strings"
 )
 
-//var envVars map[string]string
-
-// func init() {
-// 	//envVars = GetEnvVars()
-// }
-
 type (
 	parseFunc func(string) (interface{}, error)
 	tagInfo   struct {
@@ -127,17 +121,13 @@ func parse(v reflect.Value) error {
 		}
 
 		tf := t.Field(i) // eg tf.Type.Name() == LatLng
-		log.Printf("\t*** Field ... f.Type().Name(): [%+v],\nt: [%+v], tf: [%+v]\n\n",
-			f.Type().Name(), t, tf)
 
-		log.Printf("\t\t>>> Struct Field f: [%+v]\n", f)
-		log.Printf("\t\t<<< Struct Type Field tf: [%+v]\n", tf)
+		log.Printf("\t\t<<< Type of input Value - t: [%+v]\n", t)
+		log.Printf("\t\t<<< Struct Field - f: [%+v]\n", f)
+		log.Printf("\t\t<<< Struct Type Field - tf: [%+v]\n", tf)
 
 		// struct field is a non-nil pointer.
 		if f.Kind() == reflect.Ptr && !f.IsNil() {
-			log.Println("\t\t== pointer and not nil ...")
-
-			log.Printf("\t\t== f type name: [%+v]\n", f.Type().Name())
 			err := Parse(f.Interface()) // Parse accepts an interface type, so we get the f value as an interface
 			if err != nil {
 				return err
@@ -146,13 +136,7 @@ func parse(v reflect.Value) error {
 		}
 
 		// struct field itself is a struct.
-		// Addr refers to memory address
-		//if f.Kind() == reflect.Struct && f.CanAddr() && f.Type().Name() == "" {
-		if f.Kind() == reflect.Struct && f.CanAddr() {
-			log.Println("\t\t-- struct and addressable ...")
-
-			log.Printf("\t\t-- f.Addr(): %+v ... f.Type().Name(): [%+v] ... t.Name(): [%+v]\n",
-				f.Addr(), f.Type().Name(), t.Name())
+		if f.Kind() == reflect.Struct && f.CanAddr() { // Addr refers to memory address.
 			// f.Addr() returns a pointer to the struct f and Interface() returns the value of f as an interface.
 			err := Parse(f.Addr().Interface())
 			if err != nil {
@@ -160,11 +144,11 @@ func parse(v reflect.Value) error {
 			}
 			continue
 		}
+
 		fieldV, err := getValue(tf, envVars)
 		if err != nil {
 			return err
 		}
-		log.Printf("\t\t@@@ obtained field value: [%s]\n", fieldV)
 
 		err = setValue(f, tf, fieldV)
 		if err != nil {
@@ -180,11 +164,8 @@ func GetEnvVars() map[string]string {
 
 	envM := make(map[string]string, len(envs))
 	for _, e := range envs {
-		//log.Printf("\t\t+++ 1 ENV Info: [%+v]\n", e)
-
 		p := strings.SplitN(e, "=", 2)
 		envM[p[0]] = p[1]
-		//log.Printf("\t\t+++ 2 ENV Info: %s = %s\n", p[0], p[1])
 	}
 	return envM
 }
@@ -213,14 +194,13 @@ func processTag(sf reflect.StructField) tagInfo {
 
 func getValue(sf reflect.StructField, envVars map[string]string) (string, error) {
 	ti := processTag(sf)
-	log.Printf("\t\t### Tag Info: [%+v]\n", ti)
+	log.Printf("\t\tTag Info: [%+v]\n", ti)
 
 	fieldVal := ti.defVal
 	if ti.envName != "" {
 		envVal, ok := envVars[ti.envName]
-		//log.Printf("\t\t### Env var: ti.envName=%s ... envVal=%s\n", ti.envName, envVal)
-
 		if ok {
+			log.Printf("\t\tEnv Info: [%s]\n", envVal)
 			return envVal, nil
 		}
 		if ti.required {
@@ -230,7 +210,28 @@ func getValue(sf reflect.StructField, envVars map[string]string) (string, error)
 	return fieldVal, nil
 }
 
-func setValue(f reflect.Value, sf reflect.StructField, val string) error {
+// setField sets a struct field's value. It accepts the field Value, the field Type and the value
+// to set the field to.
+func setValue(f reflect.Value, t reflect.StructField, val string) error {
+	tt := t.Type
+	ff := f
+	if tt.Kind() == reflect.Ptr {
+		tt = tt.Elem() // retrieving element type
+		ff = f.Elem()  // returns the value the pointer points to
+	}
+
+	parseF, ok := defaultParsers[tt.Kind()]
+	if !ok {
+		return fmt.Errorf("no parser found for %s", t.Name)
+	}
+
+	vv, err := parseF(val)
+	if err != nil {
+		return fmt.Errorf("failed to parse value %s for field %s", val, t.Name)
+	}
+
+	ff.Set(reflect.ValueOf(vv).Convert(tt)) // converts reflect.ValueOf(vv) into type corresponding to ff
+	log.Printf("\t\t>>> SET var: ff - %+v\n\n", ff)
 
 	return nil
 }

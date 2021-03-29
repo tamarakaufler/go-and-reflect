@@ -40,3 +40,8 @@ type LatLng struct {
 
 ## Details
 
+### reflect package - investigating data structures
+
+First step towards the env package.
+
+### env package - poor man's carloos0/env
