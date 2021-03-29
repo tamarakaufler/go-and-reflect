@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	refl "github.com/tamarakaufler/go-and-reflect/reflect"
+	"github.com/tamarakaufler/go-and-reflect/env"
 )
 
 type Configuration struct {
@@ -36,18 +36,25 @@ func main() {
 
 	cfg := &Configuration{}
 
-	err := refl.Parse(cfg)
+	// err := refl.Parse(cfg)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// log.Println("=====================================================")
+	// cfg = &Configuration{
+	// 	Name:    "Marianne",
+	// 	Age:     33,
+	// 	Address: Address{},
+	// }
+	// err = refl.Parse(cfg)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	err := env.Parse(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("=====================================================")
-	cfg = &Configuration{
-		Name:    "Marianne",
-		Age:     33,
-		Address: Address{},
-	}
-	err = refl.Parse(cfg)
-	if err != nil {
-		log.Fatal(err)
-	}
+
 }
