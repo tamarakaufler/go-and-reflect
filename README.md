@@ -17,6 +17,7 @@ reflect.Type provides information about data structure fields that identifies th
 reflect.Kind identifies whether the data structure is a struct, pointer, string, float32 etc.
 reflect.Value informs about the values fields hold and, if allowed, provides a setter.
 
+```
    reflect.Type
         |
         |  reflect.Kind
@@ -42,6 +43,7 @@ type Address struct { ......................................... reflect.Type:  {
 type LatLng struct {
     Latitude, Longitude float64
 }
+```
 
 ## Details
 
