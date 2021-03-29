@@ -23,8 +23,8 @@ Go reflection/introspection during runtime of an application revolves around thr
 ```
    reflect.Type
         |
-        |  reflect.Kind
-        |      |
+        | reflect.Kind
+        |    |
 type User struct {
     Name string ....... field name Name                            examples of reflection
     Age float32 ....... field name Age ............ reflect.Type:  {Name:Age PkgPath: Type:float32
