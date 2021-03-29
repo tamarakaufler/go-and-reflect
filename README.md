@@ -23,16 +23,16 @@ reflect.Value informs about the values fields hold and, if allowed, provides a s
         |  reflect.Kind
         |      |
 type User struct {
-    Name string ....... field name Name                                     examples of reflection
+    Name string ....... field name Name                            examples of reflection
     Age float32 ....... field name Age ............ reflect.Type:  {Name:Age PkgPath: Type:float32
-                                                                                Tag:env:"USER_AGE" defVal:"23.5"
-                                                                                Offset:16 Index:[1] Anonymous:false}
-                                                    reflect.Value:  33
+                                                                   Tag:env:"USER_AGE" defVal:"23.5"
+                                                                   Offset:16 Index:[1] Anonymous:false}
+                                                    reflect.Value: 33
     Address ........... an embedded field, has no field name
 }
 
 type Address struct { ............................. reflect.Type:  {Name:Address PkgPath: Type:main.Address Tag:
-                                                                                Offset:24 Index:[2] Anonymous:false}
+                                                                   Offset:24 Index:[2] Anonymous:false}
                                                     reflect.Value: {Street: City: Postcode: LatLng:{Lat:0 Lng:0}}
     Street string
     City string
