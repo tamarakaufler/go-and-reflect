@@ -9,8 +9,8 @@ import (
 )
 
 type User struct {
-	Name    string  `env:"USER_NAME" defVal:"Lucien"`
-	Age     float32 `env:"USER_AGE" defVal:"23.5"`
+	Name    string  `env:"USER_NAME" envDefault:"Lucien"`
+	Age     float32 `env:"USER_AGE" envDefault:"23.5"`
 	Address Address
 
 	nationalInsurance string
@@ -24,8 +24,8 @@ type Address struct {
 }
 
 type LatLng struct {
-	Lat float64 `env:"USER_ADDRESS_LAT" defVal:"40.0000"`
-	Lng float64 `env:"USER_ADDRESS_LNG" defVal:"-115.1111"`
+	Lat float64 `env:"USER_ADDRESS_LAT" envDefault:"40.0000"`
+	Lng float64 `env:"USER_ADDRESS_LNG" envDefault:"-115.1111"`
 }
 
 func main() {

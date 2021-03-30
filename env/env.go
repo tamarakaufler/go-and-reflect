@@ -12,9 +12,9 @@ import (
 type (
 	parseFunc func(string) (interface{}, error)
 	tagInfo   struct {
-		envName  string
-		required bool
-		defVal   string
+		envName    string
+		required   bool
+		envDefault string
 	}
 )
 
@@ -185,9 +185,9 @@ func processTag(sf reflect.StructField) tagInfo {
 		}
 	}
 
-	d, okD := sf.Tag.Lookup("defVal")
+	d, okD := sf.Tag.Lookup("envDefault")
 	if okD {
-		ti.defVal = d
+		ti.envDefault = d
 	}
 	return ti
 }
@@ -196,7 +196,7 @@ func getValue(sf reflect.StructField, envVars map[string]string) (string, error)
 	ti := processTag(sf)
 	log.Printf("\t\tTag Info: [%+v]\n", ti)
 
-	fieldVal := ti.defVal
+	fieldVal := ti.envDefault
 	if ti.envName != "" {
 		envVal, ok := envVars[ti.envName]
 		if ok {

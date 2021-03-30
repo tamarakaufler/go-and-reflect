@@ -9,9 +9,9 @@ import (
 
 type (
 	tagInfo struct {
-		envName  string
-		required bool
-		defVal   string
+		envName    string
+		required   bool
+		envDefault string
 	}
 )
 
@@ -107,9 +107,9 @@ func processTag(sf reflect.StructField) tagInfo {
 		}
 	}
 
-	d, okD := sf.Tag.Lookup("defVal")
+	d, okD := sf.Tag.Lookup("envDefault")
 	if okD {
-		ti.defVal = d
+		ti.envDefault = d
 	}
 	return ti
 }

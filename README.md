@@ -28,7 +28,7 @@ Go reflection/introspection during runtime of an application revolves around thr
 type User struct {
     Name string ....... field name Name                            examples of reflection
     Age float32 ....... field name Age ............ reflect.Type:  {Name:Age PkgPath: Type:float32
-                                                                   Tag:env:"USER_AGE" defVal:"23.5"
+                                                                   Tag:env:"USER_AGE" envDefault:"23.5"
                                                                    Offset:16 Index:[1] Anonymous:false}
                                                     reflect.Value: 33
     Address ........... an embedded field, has no field name
