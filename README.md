@@ -1,6 +1,6 @@
 # go-and-reflect (on data structures and life)
 
-A little exercise I undertook to get a better understanding of Go reflection.
+Learning more about Go reflection.
 
 # Go reflection
 
