@@ -58,7 +58,7 @@ First step towards the env package.
 
 ### cmd/json/main.go - custom marshalling/unmarshalling.
 
-The concrete types User2 and User3 have ideantical fields:
+The concrete types User2 and User3 have identical fields:
 
 ```
 type User2 struct {
