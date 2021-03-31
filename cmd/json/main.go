@@ -6,8 +6,8 @@ import (
 	"os"
 	"reflect"
 	"strings"
-	// "github.com/tamarakaufler/go-and-reflect/env"
-	// refl "github.com/tamarakaufler/go-and-reflect/reflect"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 type User2 struct {
@@ -17,7 +17,7 @@ type User2 struct {
 	NI      []int32  `json:"ni"`
 	Address Address2 `json:"address"`
 
-	nationalInsurance string
+	nationalInsurance string //nolint:structcheck,unused
 }
 
 type Address2 struct {
@@ -46,6 +46,12 @@ type tagInfo struct {
 	omit      bool
 }
 
+var customFieldsM = map[string]struct{}{
+	"note":                {},
+	"user_address_street": {},
+	"user_address_city":   {},
+}
+
 func main() {
 	os.Setenv("USER_NAME", "Rebecca")
 	os.Setenv("USER_ADDRESS_STREET", "16 St Mary's Close")
@@ -54,10 +60,11 @@ func main() {
 	os.Setenv("USER_AGE", "45")
 
 	log.Println("######################### json ############################")
+	log.Println(`User2 and User3 are identical data structures. User2 has a custom marshalling/unmarshalling,
+	User3 uses defaults.`)
 
-	log.Printf("User2 and User3 are identical data structures. User2 has a custom marshalling/unmarshalling, User3 uses defaults.\n\n")
-
-	u := User2{
+	log.Println("========================= custom marshal ============================")
+	u2 := User2{
 		Name: "Amy",
 		Age:  35,
 		Note: []rune("Illustrator"),
@@ -66,14 +73,20 @@ func main() {
 			Street:   []rune("123 Tyttenhanger"),
 			City:     []rune("St Albans"),
 			Postcode: "AL4",
+			LatLng: LatLng{
+				Lat: 40.0000,
+				Lng: -115.0000,
+			},
 		},
 	}
-	b, err := json.Marshal(u)
+	b2, err := json.Marshal(u2)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Marshalled User2 with custom marshaller: %s\n\n", string(b))
+	log.Printf("Marshalling User2 (custom marshalling): %+v\n\n", u2)
+	log.Printf("Marshalled User2 with custom marshaller: %s\n\n", string(b2))
 
+	log.Println("========================= default marshal ============================")
 	u3 := User3{
 		Name: "Lucien",
 		Age:  35,
@@ -85,11 +98,19 @@ func main() {
 			Postcode: "W14",
 		},
 	}
-	b, err = json.Marshal(u3)
+	b3, err := json.Marshal(u3)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Marshalled User3 with default marshaller: %s\n\n", string(b))
+	log.Printf("Marshalled User3 with default marshaller: %s\n\n", string(b3))
+
+	log.Println("========================= custom unmarshal ============================")
+	u2 = User2{}
+	errUnm := json.Unmarshal(b2, &u2)
+	if errUnm != nil {
+		log.Fatal(errUnm)
+	}
+	log.Printf("Unmarshalled User2 with custom marshaller: %+v\n\n", u2)
 }
 
 func (u User2) MarshalJSON() ([]byte, error) {
@@ -98,16 +119,17 @@ func (u User2) MarshalJSON() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("dst to marshall: %+v\n", dst)
 	return json.Marshal(&dst)
 }
 
-func (u User2) UnmarshalJSON(b []byte) error {
-	log.Printf("\tUser2 to unmarshal: %+v\n", u)
+func (u *User2) UnmarshalJSON(b []byte) error {
+	log.Printf("\tbytes to unmarshal User2: %s\n", string(b))
 
-	return json.Unmarshal(b, &u)
-	//return unmarshalMe(u, b)
+	err := unmarshalMe(b, u)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func marshalMe(src interface{}, dst map[string]interface{}) (map[string]interface{}, error) {
@@ -148,8 +170,8 @@ func marshalMe(src interface{}, dst map[string]interface{}) (map[string]interfac
 			dst[ti.name] = newF
 			return dst, nil
 		}
-		log.Printf("\tNot a struct: %+v\n", fv)
 
+		log.Printf("\tNot a struct: %+v\n", fv)
 		log.Printf("* fv: %+v\n", fv)
 		switch fft := fv.Interface().(type) {
 		case []rune:
@@ -167,12 +189,39 @@ func marshalMe(src interface{}, dst map[string]interface{}) (map[string]interfac
 		}
 		dst[ti.name] = newF
 	}
-
 	return dst, nil
 }
 
-func unmarshalMe(i interface{}, b []byte) error {
+func unmarshalMe(b []byte, dst interface{}) error {
+	src := map[string]interface{}{}
 
+	err := json.Unmarshal(b, &src)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("unmarshaled bytes into array: %+v\n\n", src)
+
+	src = processMap(src)
+
+	msCfg := &mapstructure.DecoderConfig{
+		// DecodeHook doed not work recursively for maps of maps.
+		// DecodeHook: mapstructure.ComposeDecodeHookFunc(
+		// ),
+		WeaklyTypedInput: false,
+		TagName:          "json",
+		Result:           dst,
+	}
+
+	dec, err := mapstructure.NewDecoder(msCfg)
+	if err != nil {
+		return err
+	}
+
+	err = dec.Decode(&src)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -205,4 +254,40 @@ func processTag(sf reflect.StructField) tagInfo {
 
 	ti.name = tag
 	return ti
+}
+
+func processMap(src map[string]interface{}) map[string]interface{} {
+
+	for k, v := range src {
+		log.Printf("\t\tkey: %s, value: %v, (type): %T\n", k, v, v)
+
+		//switch vv := v.(type) {
+		switch vv := v.(type) {
+		case map[string]interface{}:
+			s := processMap(vv)
+			src[k] = s
+		default:
+			ms := stringToRuneSlice(k, v)
+			src[k] = ms
+		}
+	}
+	return src
+}
+
+// stringToRuneSlice takes value and converts it accordingly for correct unmarshalling.
+// Input is field name (map key) and the corresponding value.
+func stringToRuneSlice(f string, i interface{}) interface{} {
+	log.Printf(">>> field = %s, value = %+v, (type) = %T\n", f, i, i)
+
+	_, ok := customFieldsM[f]
+
+	switch v := i.(type) {
+	case string:
+		if !ok {
+			return i
+		}
+		return []rune(v)
+	default:
+		return i
+	}
 }

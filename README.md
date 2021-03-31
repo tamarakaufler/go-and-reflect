@@ -86,3 +86,13 @@ type LatLng struct {
 
 User2 has a custom marshaller and unmarshaller.
 Go treats []rune and []int32 the same because rune is an alias for int32. The custom marshaller marshals rune slices into string while leaving the NI field as is, ie it is marshaled as []int32.
+
+#### marshalling
+
+Custom marshaling for User2 implements (User2).MarshalJSON. The implementation uses
+pure reflection.
+
+#### unmarshalling
+
+Custom unmarshaling for User2 implements (*User2).UnmarshalJSON. The implementation
+uses type assertion and mapstructure library.

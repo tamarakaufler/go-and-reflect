@@ -12,7 +12,7 @@ type User struct {
 	Age     float32 `env:"USER_AGE" envDefault:"23.5"`
 	Address Address
 
-	nationalInsurance string
+	nationalInsurance string //nolint:structcheck,unused
 }
 
 type Address struct {
@@ -22,41 +22,10 @@ type Address struct {
 	LatLng   LatLng
 }
 
-type User2 struct {
-	Name    string  `json:"user_name"`
-	Age     float32 `json:"user_age"`
-	Note    []rune  `json:"note"`
-	Address Address2
-
-	nationalInsurance string
-}
-
-type Address2 struct {
-	Street   []rune `json:"user_address_street"`
-	City     []rune `json:"user_address_city"`
-	Postcode string `json:"user_address_postcode"`
-	LatLng   LatLng
-}
-
 type LatLng struct {
 	Lat float64 `env:"USER_ADDRESS_LAT" envDefault:"40.0000"`
 	Lng float64 `env:"USER_ADDRESS_LNG" envDefault:"-115.1111"`
 }
-
-type User3 struct {
-	Name    string  `json:"user_name"`
-	Age     float32 `json:"user_age"`
-	Note    []rune  `json:"note"`
-	Address Address2
-
-	nationalInsurance string
-}
-
-// type tagInfo struct {
-// 	name      string
-// 	omitempty bool
-// 	omit      bool
-// }
 
 func main() {
 	os.Setenv("USER_NAME", "Rebecca")

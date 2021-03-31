@@ -12,7 +12,7 @@ type User struct {
 	Age     float32 `env:"USER_AGE" envDefault:"23.5"`
 	Address Address
 
-	nationalInsurance string
+	nationalInsurance string //nolint:structcheck,unused
 }
 
 type Address struct {
