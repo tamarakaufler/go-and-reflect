@@ -183,12 +183,10 @@ func marshalMe(src interface{}, dst map[string]interface{}) (map[string]interfac
 
 func unmarshalMe(b []byte, dst interface{}) error {
 	src := map[string]interface{}{}
-
 	err := json.Unmarshal(b, &src)
 	if err != nil {
 		return err
 	}
-
 	log.Printf("unmarshaled bytes into array: %+v\n\n", src)
 
 	src = processMap(src)
@@ -201,7 +199,6 @@ func unmarshalMe(b []byte, dst interface{}) error {
 		TagName:          "json",
 		Result:           dst,
 	}
-
 	dec, err := mapstructure.NewDecoder(msCfg)
 	if err != nil {
 		return err
