@@ -84,7 +84,8 @@ type LatLng struct {
 }
 ```
 
-User2 has a custom marshaller and unmarshaller.
+User2 has a custom marshaller and unmarshaller. Note, Street and City fields are rune slices, however they are required to be marsaled into strings and unmarshaled from strings to rune slices. Other fields, that are either rune or int32 slices are required to be marshalled and unmashalled as such.
+
 Go treats []rune and []int32 the same because rune is an alias for int32. The custom marshaller marshals rune slices into string while leaving the NI field as is, ie it is marshaled as []int32.
 
 #### marshalling
