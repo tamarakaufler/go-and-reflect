@@ -118,11 +118,7 @@ func (u User2) MarshalJSON() ([]byte, error) {
 func (u *User2) UnmarshalJSON(b []byte) error {
 	log.Printf("\tbytes to unmarshal User2: %s\n", string(b))
 
-	err := unmarshalMe(b, u)
-	if err != nil {
-		return err
-	}
-	return nil
+	return unmarshalMe(b, u)
 }
 
 func marshalMe(src interface{}, dst map[string]interface{}) (map[string]interface{}, error) {
