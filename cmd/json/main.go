@@ -94,7 +94,7 @@ func main() {
 
 func (u User2) MarshalJSON() ([]byte, error) {
 	dst := map[string]interface{}{}
-	dst, err := processMe(u, dst)
+	dst, err := marshalMe(u, dst)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func (u User2) UnmarshalJSON(b []byte) error {
 	//return unmarshalMe(u, b)
 }
 
-func processMe(src interface{}, dst map[string]interface{}) (map[string]interface{}, error) {
+func marshalMe(src interface{}, dst map[string]interface{}) (map[string]interface{}, error) {
 	t := reflect.TypeOf(src)
 	v := reflect.ValueOf(src)
 	log.Printf("==> Name: %s , src to marshall: %+v\n", t.Name(), src)
@@ -141,7 +141,7 @@ func processMe(src interface{}, dst map[string]interface{}) (map[string]interfac
 			log.Printf("\tSTRUCT --> vv: %+v\n\n", fv)
 			fDst := map[string]interface{}{}
 
-			newF, err := processMe(fv.Interface(), fDst)
+			newF, err := marshalMe(fv.Interface(), fDst)
 			if err != nil {
 				return nil, err
 			}
