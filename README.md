@@ -56,7 +56,7 @@ First step towards the env package.
 
 ### env package - poor man's carloos0/env
 
-### json package - custom marshalling/unmarshalling.
+### json (cmd/json/main.go) - custom marshalling/unmarshalling.
 
 The concrete types User2 and User3 have ideantical fields:
 
