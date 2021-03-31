@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"log"
-	"os"
 	"reflect"
 	"strings"
 
@@ -53,12 +52,6 @@ var customFieldsM = map[string]struct{}{
 }
 
 func main() {
-	os.Setenv("USER_NAME", "Rebecca")
-	os.Setenv("USER_ADDRESS_STREET", "16 St Mary's Close")
-	os.Setenv("USER_ADDRESS_CITY", "St Albans")
-	os.Setenv("USER_ADDRESS_POSTCODE", "AL3")
-	os.Setenv("USER_AGE", "45")
-
 	log.Println("######################### json ############################")
 	log.Println(`User2 and User3 are identical data structures. User2 has a custom marshalling/unmarshalling,
 	User3 uses defaults.`)
