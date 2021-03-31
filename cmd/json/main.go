@@ -265,6 +265,8 @@ func processMap(src map[string]interface{}) map[string]interface{} {
 func stringToRuneSlice(f string, i interface{}) interface{} {
 	log.Printf(">>> field = %s, value = %+v, (type) = %T\n", f, i, i)
 
+	// TODO
+	// improve setup of customFieldsM to contain User2 field names rather than their json aliases.
 	_, ok := customFieldsM[f]
 
 	switch v := i.(type) {
