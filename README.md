@@ -55,3 +55,34 @@ type LatLng struct {
 First step towards the env package.
 
 ### env package - poor man's carloos0/env
+
+### json package - custom marshalling/unmarshalling.
+
+The concrete types User2 and User3 have ideantical fields:
+
+```
+type User2 struct {
+	Name    string   `json:"user_name"`
+	Age     float32  `json:"user_age"`
+	Note    []rune   `json:"note"`
+	NI      []int32  `json:"ni"`
+	Address Address2 `json:"address"`
+
+	nationalInsurance string
+}
+
+type Address2 struct {
+	Street   []rune `json:"user_address_street"`
+	City     []rune `json:"user_address_city"`
+	Postcode string `json:"user_address_postcode"`
+	LatLng   LatLng `json:"latlng"`
+}
+
+type LatLng struct {
+	Lat float64 `env:"USER_ADDRESS_LAT" envDefault:"40.0000" json:"lat"`
+	Lng float64 `env:"USER_ADDRESS_LNG" envDefault:"-115.1111" json:"lng"`
+}
+```
+
+User2 has a custom marshaller and unmarshaller.
+Go treats []rune and []int32 the same because rune is an alias for int32. The custom marshaller marshals rune slices into string while leaving the NI field as is, ie it is marshaled as []int32.

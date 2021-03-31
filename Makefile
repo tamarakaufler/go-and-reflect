@@ -5,10 +5,16 @@ deps:
 lint:
 	@golangci-lint -v run
 
-run:
+run-reflect:
 	@go run cmd/reflect/main.go
 
-all: deps lint run
+run-env:
+	@go run cmd/env/main.go
+
+run-json:
+	@go run cmd/json/main.go
+
+all: deps lint run-reflect run-env run-json
 
 .PHONY:
 	deps, lint, run
