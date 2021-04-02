@@ -50,14 +50,19 @@ func parse(v reflect.Value) error {
 	log.Printf("PARSE INPUT: v [%+v]\n", v.Type().Name())
 	t := v.Type() // type of the struct, eg Address (=> t.Name() = Address)
 
+	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++")
+	log.Printf("\t*** t.Name(): [%+v]\n", t.Name())
+	log.Printf("\t*** v: [%+v] v.Kind() [%+v]\n", v, v.Kind())
+
 	for i := 0; i < t.NumField(); i++ {
 		f := v.Field(i)
 		tf := t.Field(i) // eg tf.Type.Name() == LatLng
-		log.Printf("\t*** Field ... f.Type().Name(): [%+v], t.Name(): [%+v], tf.Type.Name(): [%+v]\n",
-			f.Type().Name(), t.Name(), tf.Type.Name())
 
-		log.Printf("\t\t>>> Struct Field f: [%+v]\n", f)
-		log.Printf("\t\t<<< Struct Type Field tf: [%+v]\n", tf)
+		fmt.Println("--------------------------------------------")
+		log.Printf("\t\t*** Field ... f.Type() == f.Type().Name(): [%+v], tf.Type == tf.Type.Name(): [%+v]\n", f.Type(), tf.Type)
+
+		log.Printf("\t\t\t<<< Struct Type Field tf: [%+v] (tf.Type [%+v]) - tf.Type.Kind() [%+v]\n", tf, tf.Type, tf.Type.Kind())
+		log.Printf("\t\t\t>>> Struct Field f: [%+v] (f.Type().Kind() [%+v]) - f.Kind() [%+v]\n", f, f.Type().Kind(), f.Kind())
 
 		// struct field is a non-nil pointer.
 		if f.Kind() == reflect.Ptr && !f.IsNil() {
@@ -88,8 +93,10 @@ func parse(v reflect.Value) error {
 		}
 
 		ti := processTag(tf)
-		log.Printf("\t\t### Tag Info: [%+v]\n", ti)
+		log.Printf("\t\t\t--> Tag Info: [%+v]\n", ti)
+		fmt.Println("--------------------------------------------")
 	}
+	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++")
 
 	return nil
 }
