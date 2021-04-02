@@ -11,7 +11,7 @@ Go reflection/introspection during runtime of an application revolves around thr
 - reflect.Type ........... provides information about the data structure's name (User, Address etc), its field names
                            (Name, Age), field tags metadata.
 - reflect.Kind ........... tells if a data structure is a struct, pointer, map, string etc
-- reflect.Value .......... holds information about the values inspected data structure field
+- reflect.Value .......... holds information about the value of inspected data structure field
 
 **reflect.Type** provides information about data structure and its fields for identification and metadata
                  (User, Address, Age, field tags etc).
