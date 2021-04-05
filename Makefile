@@ -11,10 +11,10 @@ run-reflect:
 run-env:
 	@go run cmd/env/main.go
 
-run-json:
+run-marshal:
 	@go run cmd/marshal/main.go
 
-all: deps lint run-reflect run-env run-json
+all: deps lint run-reflect run-env run-marshal
 
 .PHONY:
 	deps, lint, run
