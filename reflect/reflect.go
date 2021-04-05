@@ -59,10 +59,13 @@ func parse(v reflect.Value) error {
 		tf := t.Field(i) // eg tf.Type.Name() == LatLng
 
 		fmt.Println("--------------------------------------------")
-		log.Printf("\t\t*** Field ... f.Type() == f.Type().Name(): [%+v], tf.Type == tf.Type.Name(): [%+v]\n", f.Type(), tf.Type)
+		log.Printf("\t\t*** Field ... f.Type() == f.Type().Name(): [%+v], tf.Type == tf.Type.Name(): [%+v]\n",
+			f.Type(), tf.Type)
 
-		log.Printf("\t\t\t<<< Struct Type Field tf: [%+v] (tf.Type [%+v]) - tf.Type.Kind() [%+v]\n", tf, tf.Type, tf.Type.Kind())
-		log.Printf("\t\t\t>>> Struct Field f: [%+v] (f.Type().Kind() [%+v]) - f.Kind() [%+v]\n", f, f.Type().Kind(), f.Kind())
+		log.Printf("\t\t\t<<< Struct Type Field tf: [%+v] (tf.Type [%+v]) - tf.Type.Kind() [%+v]\n",
+			tf, tf.Type, tf.Type.Kind())
+		log.Printf("\t\t\t>>> Struct Field f: [%+v] (f.Type().Kind() [%+v]) - f.Kind() [%+v]\n",
+			f, f.Type().Kind(), f.Kind())
 
 		// struct field is a non-nil pointer.
 		if f.Kind() == reflect.Ptr && !f.IsNil() {

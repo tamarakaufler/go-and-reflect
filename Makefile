@@ -12,7 +12,7 @@ run-env:
 	@go run cmd/env/main.go
 
 run-json:
-	@go run cmd/json/main.go
+	@go run cmd/marshal/main.go
 
 all: deps lint run-reflect run-env run-json
 
