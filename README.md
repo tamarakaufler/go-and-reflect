@@ -48,6 +48,14 @@ type LatLng struct {
 }
 ```
 
+### Private struct fields
+
+PkgPath is empty for exported fields
+
+### Embedded struct fields
+
+Anonymous is true for embedded fields
+
 ## Details
 
 ### reflect package - investigating data structures
